@@ -73,13 +73,18 @@ const defaultEvents = [
 ];
 
 function normalizeLeaderboard(rows) {
-  return rows.map((u, i) => ({
-    rank: u.rank || i + 1,
-    name: u.username || u.name || u.tag || u.userTag || u.displayName || u.userId || "Unknown",
-    time: u.time || u.voiceTimeText || u.stat || msToTime(u.voiceTime || u.totalVoice || u.voiceMs || 0),
-    xp: u.xp || u.levelXp || u.exp || 0,
-    coins: u.coins || u.coin || u.balance || 0,
-  }));
+  return rows.map((u, i) => {
+    const userId = u.userId || u.discordId || u.id || "";
+    return {
+      rank: u.rank || i + 1,
+      userId,
+      name: u.displayName || u.username || u.name || u.tag || u.userTag || (userId ? `User ${String(userId).slice(-4)}` : "Unknown"),
+      avatar: u.avatar || u.avatarURL || u.avatarUrl || null,
+      time: u.time || u.voiceTimeText || u.stat || msToTime(u.voiceTime || u.totalVoice || u.voiceMs || u.totalVoiceMs || 0),
+      xp: u.xp || u.levelXp || u.exp || u.voiceXp || 0,
+      coins: u.coins || u.coin || u.balance || u.voiceCoins || 0,
+    };
+  });
 }
 
 function msToTime(ms) {
@@ -205,6 +210,10 @@ app.get("/events", async (req, res) => {
 
 app.get("/leaderboard", async (req, res) => {
   res.render("leaderboard", { site, leaderboard: await getLeaderboard() });
+});
+
+app.get("/leaderboard/embed", async (req, res) => {
+  res.render("leaderboard_embed", { site, leaderboard: await getLeaderboard() });
 });
 
 app.get("/admin/login", (req, res) => {
