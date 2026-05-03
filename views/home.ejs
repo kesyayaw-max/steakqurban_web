@@ -1,0 +1,30 @@
+<!DOCTYPE html><html lang="id"><head><%- include("partials/head", {site}) %></head><body>
+<div class="orb o1"></div><div class="orb o2"></div>
+<%- include("partials/nav", {site}) %>
+<header class="hero">
+  <div>
+    <img src="/logo.jpg" class="hero-logo" alt="SteakQurban Logo">
+    <p class="pill">⚡ FULL LIVE ECOSYSTEM</p>
+    <h1>SteakQurban <span>Live Panel</span></h1>
+    <p class="subtitle">Website premium yang membaca leaderboard dari bot utama dan security status dari bot security.</p>
+    <div class="actions"><a class="btn primary" href="<%= site.invite %>" target="_blank">Join Discord</a><a class="btn glass" href="/admin">Open Panel</a></div>
+    <div class="stats-strip">
+      <div><b data-live="mainDb"><%= stats.mainDb %></b><span>Main DB</span></div>
+      <div><b data-live="securityDb"><%= stats.securityDb %></b><span>Security DB</span></div>
+      <div><b data-live="security"><%= stats.security %></b><span>Protection</span></div>
+    </div>
+  </div>
+  <div class="panel premium">
+    <h3>🛡️ SQS Security Sync</h3>
+    <div class="metric"><span>Anti Spam</span><b data-live="antiSpam"><%= stats.antiSpam %></b></div>
+    <div class="metric"><span>Anti Nuke</span><b data-live="antiNuke"><%= stats.antiNuke %></b></div>
+    <div class="metric"><span>Spam Limit</span><b data-live="spamLimit"><%= stats.spamLimit %></b></div>
+    <div class="metric"><span>Timeout</span><b data-live="punishmentDuration"><%= stats.punishmentDuration %></b></div>
+  </div>
+</header>
+<main class="container">
+  <section class="section-head"><div><p class="pill">🎉 EVENTS</p><h2>Community Events</h2></div><a href="/events">Lihat semua →</a></section>
+  <section class="cards"><% events.slice(0,4).forEach(e=>{ %><article class="card accent-<%= e.accent || 'purple' %>"><span class="badge"><%= e.status %></span><h3><%= e.title %></h3><p><%= e.desc %></p><div class="meta"><span><%= e.category %></span><span><%= e.prize %></span></div></article><% }) %></section>
+  <section class="split"><div><p class="pill">🏆 LIVE DATA</p><h2>Leaderboard</h2><p class="muted">Data otomatis dari MAIN_MONGO_URI.</p></div><div class="leaderbox" id="leaderboardBox"><% leaderboard.forEach(u=>{ %><div class="leader-row"><div><strong>#<%= u.rank %> @<%= u.name %></strong><span><%= u.time %> active voice</span></div><b><%= u.xp %> XP</b></div><% }) %></div></section>
+</main>
+<footer>© <%= new Date().getFullYear() %> <%= site.name %></footer><script src="/app.js"></script></body></html>

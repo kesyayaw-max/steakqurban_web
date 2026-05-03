@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="id">
+<head><%- include("partials/head", {site}) %></head>
+<body>
+<%- include("partials/nav", {site}) %>
+
+<main class="container page">
+  <section class="profile-hero">
+    <img src="<%= avatar %>" class="avatar-xl">
+    <div>
+      <p class="pill">👤 USER DASHBOARD</p>
+      <h1><%= user.global_name || user.username %></h1>
+      <p class="muted">Personal stats dari leaderboard SteakQurban.</p>
+    </div>
+    <a class="btn glass" href="/logout">Logout</a>
+  </section>
+
+  <section class="admin-grid">
+    <div class="dash"><h3>Rank</h3><b>#<%= profile.rank %></b><p>Voice Leaderboard</p></div>
+    <div class="dash"><h3>Voice Time</h3><b><%= profile.time %></b><p>Total active voice</p></div>
+    <div class="dash"><h3>XP</h3><b><%= profile.xp %></b><p>Experience</p></div>
+    <div class="dash"><h3>Coins</h3><b>💰 <%= profile.coins %></b><p>Balance</p></div>
+  </section>
+
+  <section class="split">
+    <div>
+      <p class="pill">🏆 LIVE LEADERBOARD</p>
+      <h2>Top Voice Kings</h2>
+      <p class="muted">Auto refresh via live API.</p>
+    </div>
+    <div class="leaderbox" id="leaderboardBox">
+      <% leaderboard.forEach(u=>{ %>
+        <div class="leader-row"><div><strong>#<%= u.rank %> @<%= u.name %></strong><span><%= u.time %> active voice</span></div><b><%= u.xp %> XP</b></div>
+      <% }) %>
+    </div>
+  </section>
+</main>
+
+<script src="/app.js"></script>
+</body>
+</html>

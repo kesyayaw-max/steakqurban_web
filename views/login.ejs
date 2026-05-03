@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="id">
+<head><%- include("partials/head", {site}) %></head>
+<body class="login-body">
+  <main class="login-card">
+    <img src="/logo.jpg" class="login-logo" alt="SteakQurban Logo">
+    <h1>Discord OAuth Login</h1>
+    <p>Login memakai akun Discord untuk akses panel.</p>
+    <% if (error) { %><div class="alert error"><%= error %></div><% } %>
+    <a class="btn primary full" href="/auth/discord">Login with Discord</a>
+    <a class="btn glass full" href="/">Back to Website</a>
+  </main>
+</body>
+</html>

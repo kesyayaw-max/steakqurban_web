@@ -1,0 +1,11 @@
+<nav class="nav">
+  <a class="brand" href="/"><img src="/logo.jpg" class="brand-logo-img" alt="SteakQurban Logo"><div><b><%= site.name %></b><small><%= site.tagline %></small></div></a>
+  <button class="menu-btn" onclick="document.body.classList.toggle('menu-open')">☰</button>
+  <div class="links">
+    <a href="/">Home</a>
+    <a href="/events">Events</a>
+    <a href="/leaderboard">Leaderboard</a>
+    <a href="/me">My Stats</a><a href="/admin">Panel</a>
+    <a class="join" href="<%= site.invite %>" target="_blank">Join Discord</a>
+  </div>
+</nav>

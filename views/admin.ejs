@@ -1,0 +1,20 @@
+<!DOCTYPE html><html lang="id"><head><%- include("partials/head", {site}) %></head><body><%- include("partials/nav", {site}) %><main class="container page">
+<section class="profile-hero">
+  <img src="<%= avatar %>" class="avatar-xl">
+  <div>
+    <p class="pill">🎮 MEE6 / DYNO STYLE PANEL</p>
+    <h1>Control Center</h1>
+    <p class="muted">Login Discord OAuth • live data • security control • event manager.</p>
+  </div>
+  <form method="POST" action="/admin/logout"><button class="btn glass">Logout</button></form>
+</section>
+<% if(saved){ %><div class="alert success">Perubahan tersimpan.</div><% } %>
+<section class="admin-grid"><div class="dash"><h3>Main DB</h3><b><%= stats.mainDb %></b><p>Leaderboard source</p></div><div class="dash"><h3>Security DB</h3><b><%= stats.securityDb %></b><p>Security config source</p></div><div class="dash"><h3>Warnings</h3><b><%= stats.warnCount %></b><p>Security logs</p></div></section>
+<section class="admin-section"><h2>🛡️ Security Control</h2><p class="muted">Toggle cepat ON/OFF langsung update ke MongoDB security bot.</p><% configs.forEach(cfg=>{ %><form class="card form-card" method="POST" action="/admin/security/<%= cfg._id %>"><h3><%= cfg.guildName || cfg.guildId %></h3>
+        <div class="quick-actions">
+          <button type="button" class="mini toggle-btn" data-id="<%= cfg._id %>" data-field="securityEnabled">Toggle Security</button>
+          <button type="button" class="mini toggle-btn" data-id="<%= cfg._id %>" data-field="antiSpam">Toggle Spam</button>
+          <button type="button" class="mini toggle-btn" data-id="<%= cfg._id %>" data-field="antiNuke">Toggle Nuke</button>
+        </div>
+        <div class="toggles"><label><span>Security</span><input type="checkbox" name="securityEnabled" <%= cfg.securityEnabled ? "checked" : "" %>></label><label><span>Anti Spam</span><input type="checkbox" name="antiSpam" <%= cfg.antiSpam ? "checked" : "" %>></label><label><span>Anti Invite</span><input type="checkbox" name="antiInvite" <%= cfg.antiInvite ? "checked" : "" %>></label><label><span>Anti Raid</span><input type="checkbox" name="antiRaid" <%= cfg.antiRaid ? "checked" : "" %>></label><label><span>Anti Nuke</span><input type="checkbox" name="antiNuke" <%= cfg.antiNuke ? "checked" : "" %>></label></div><div class="fields"><label>Spam Limit<input type="number" name="spamLimit" value="<%= cfg.spamLimit || 7 %>"></label><label>Mention Limit<input type="number" name="mentionLimit" value="<%= cfg.mentionLimit || 5 %>"></label><label>Caps Percent<input type="number" name="capsPercent" value="<%= cfg.capsPercent || 80 %>"></label><label>Timeout<input name="punishmentDuration" value="<%= cfg.punishmentDuration || '10m' %>"></label></div><button class="btn primary">Save Security Config</button></form><% }) %></section>
+<section class="admin-section"><h2>🎉 Event Manager</h2><form class="card form-card" method="POST" action="/admin/events"><div class="fields"><label>Title<input name="title" required></label><label>Category<input name="category" required></label><label>Status<input name="status" value="Soon"></label><label>Date<input name="date"></label><label>Prize<input name="prize"></label><label>Accent<select name="accent"><option>purple</option><option>gold</option><option>pink</option><option>green</option></select></label></div><label>Description<textarea name="desc" required></textarea></label><button class="btn primary">Add Event</button></form><div class="cards"><% events.forEach(e=>{ %><article class="card"><span class="badge"><%= e.status %></span><h3><%= e.title %></h3><p><%= e.desc %></p><% if(e._id){ %><form method="POST" action="/admin/events/<%= e._id %>/delete"><button class="mini danger">Delete</button></form><% } %></article><% }) %></div></section></main><script src="/app.js"></script></body></html>
