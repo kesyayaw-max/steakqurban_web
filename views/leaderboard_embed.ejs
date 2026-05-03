@@ -1,3 +1,8 @@
+<%
+  const vp = typeof voicePayload !== "undefined" ? voicePayload : {};
+  const lb = typeof leaderboard !== "undefined" ? leaderboard : [];
+%>
+
 <!DOCTYPE html>
 <html lang="id">
 <head><%- include("partials/head", {site}) %></head>
@@ -8,9 +13,9 @@
 <main class="container page">
   <section class="discord-embed-layout">
     <div class="embed-info">
-      <p class="pill">🎮 DISCORD EMBED STYLE</p>
+      <p class="pill">🎮 LEADERBOARD VOICE!</p>
       <h1>Voice Leaderboard</h1>
-      <p class="muted">Tampilan 1:1 dari API bot utama. Source: <%= voicePayload?.source || "fallback" %></p>
+      <p class="muted">Tampilan 1:1 dari API bot utama. Source: <%= vp.source || "fallback" %></p>
       <div class="actions">
         <a class="btn primary" href="/leaderboard">Classic View</a>
         <a class="btn glass" href="/me">My Stats</a>
@@ -21,13 +26,13 @@
       <div class="embed-header">
         <img src="/logo.jpg" class="embed-logo" alt="SteakQurban">
         <div>
-          <h2><%= voicePayload?.title || "🎶 Voice Leaderboard SteakQurban!" %></h2>
-          <p><%= voicePayload?.description || "Panel ini nunjukin member paling aktif di voice." %></p>
+          <h2><%= vp.title || "🎶 Voice Leaderboard SteakQurban!" %></h2>
+          <p><%= vp.description || "Panel ini nunjukin member paling aktif di voice." %></p>
         </div>
       </div>
 
       <div class="embed-list">
-        <% leaderboard.slice(0,10).forEach((user, index) => { %>
+        <% lb.slice(0,10).forEach((user, index) => { %>
           <div class="embed-rank-row">
             <div class="embed-rank-left">
               <span class="medal"><%= user.medal || (index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : "#" + (index + 1)) %></span>
@@ -49,19 +54,19 @@
 
       <div class="podium-box">
         <h3>👑 Podium</h3>
-        <% (voicePayload?.podium || leaderboard.slice(0,3)).forEach((user, index) => { %>
+        <% (vp.podium || lb.slice(0,3)).forEach((user, index) => { %>
           <div><%= user.medal || (index === 0 ? "🥇" : index === 1 ? "🥈" : "🥉") %> @<%= user.name %> • <%= user.time %></div>
         <% }) %>
       </div>
 
       <div class="mode-box">
         <h3>📊 Mode</h3>
-        <b><%= voicePayload?.label || "Voice Kings" %></b>
-        <p><%= voicePayload?.modeDescription || "Peringkat aktivitas voice paling aktif." %></p>
+        <b><%= vp.label || "Voice Kings" %></b>
+        <p><%= vp.modeDescription || "Peringkat aktivitas voice paling aktif." %></p>
         <div class="mode-grid">
-          <div><span>🎶 Aktivitas VC</span><b data-insight="activity"><%= voicePayload?.insights?.activity || "-" %></b></div>
-          <div><span>✨ Voice XP</span><b data-insight="xp"><%= voicePayload?.insights?.xp || 0 %></b></div>
-          <div><span>💸 Voice Coins</span><b data-insight="coins"><%= voicePayload?.insights?.coins || 0 %></b></div>
+          <div><span>🎶 Aktivitas VC</span><b data-insight="activity"><%= vp.insights?.activity || "-" %></b></div>
+          <div><span>✨ Voice XP</span><b data-insight="xp"><%= vp.insights?.xp || 0 %></b></div>
+          <div><span>💸 Voice Coins</span><b data-insight="coins"><%= vp.insights?.coins || 0 %></b></div>
         </div>
       </div>
 
