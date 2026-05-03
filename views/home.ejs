@@ -26,5 +26,19 @@
   <section class="section-head"><div><p class="pill">🎉 EVENTS</p><h2>Community Events</h2></div><a href="/events">Lihat semua →</a></section>
   <section class="cards"><% events.slice(0,4).forEach(e=>{ %><article class="card accent-<%= e.accent || 'purple' %>"><span class="badge"><%= e.status %></span><h3><%= e.title %></h3><p><%= e.desc %></p><div class="meta"><span><%= e.category %></span><span><%= e.prize %></span></div></article><% }) %></section>
   <section class="split"><div><p class="pill">🏆 LIVE DATA</p><h2>Leaderboard</h2><p class="muted">Data otomatis dari MAIN_MONGO_URI.</p></div><div class="leaderbox" id="leaderboardBox"><% leaderboard.forEach(u=>{ %><div class="leader-row"><div><strong>#<%= u.rank %> @<%= u.name %></strong><span><%= u.time %> active voice</span></div><b><%= u.xp %> XP</b></div><% }) %></div></section>
+
+  <section class="discord-preview-home">
+    <div>
+      <p class="pill">🎮 EMBED STYLE</p>
+      <h2>Leaderboard rasa Discord Embed</h2>
+      <p class="muted">Tampilan khusus seperti panel bot di Discord, tapi live di website.</p>
+      <a class="btn primary" href="/leaderboard/embed">Buka Embed View</a>
+    </div>
+    <div class="preview-card">
+      <h3>🎶 Voice Leaderboard SteakQurban!</h3>
+      <p>🥇 Top member • ✨ XP • 💰 Coins</p>
+      <span>Auto refresh live data</span>
+    </div>
+  </section>
 </main>
 <footer>© <%= new Date().getFullYear() %> <%= site.name %></footer><script src="/app.js"></script></body></html>
