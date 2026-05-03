@@ -39,3 +39,25 @@ document.querySelectorAll(".toggle-btn").forEach((btn) => {
     }, 1500);
   });
 });
+
+
+async function refreshEmbedLeaderboard() {
+  const box = document.getElementById("discordEmbedLeaderboard");
+  if (!box) return;
+  try {
+    const res = await fetch("/api/live");
+    const data = await res.json();
+    const list = box.querySelector(".embed-list");
+    if (list && data.leaderboard) {
+      list.innerHTML = data.leaderboard.slice(0, 10).map((u, index) => {
+        const medal = index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : "#" + (index + 1);
+        const avatar = u.avatar ? `<img src="${u.avatar}" class="mini-avatar">` : `<span class="mini-avatar fallback">${String(u.name || "?").slice(0,1).toUpperCase()}</span>`;
+        return `<div class="embed-rank-row"><div class="embed-rank-left"><span class="medal">${medal}</span>${avatar}<strong>@${u.name}</strong></div><div class="embed-rank-stats"><span>${u.time}</span><span>✨ ${u.xp} XP</span><span>💰 ${u.coins}</span></div></div>`;
+      }).join("");
+    }
+    const updated = document.getElementById("embedUpdated");
+    if (updated) updated.textContent = new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" });
+  } catch {}
+}
+setInterval(refreshEmbedLeaderboard, 15000);
+refreshEmbedLeaderboard();
