@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head><%- include("partials/head", {site}) %></head>
+<body>
+<div class="orb o1"></div><div class="orb o2"></div>
+<%- include("partials/nav", {site}) %>
+
+<main class="container page">
+  <section class="discord-embed-layout">
+    <div class="embed-info">
+      <p class="pill">🎮 DISCORD EMBED STYLE</p>
+      <h1>Voice Leaderboard</h1>
+      <p class="muted">Tampilan live data mirip embed Discord SteakQurban. Fitur lama tetap aman.</p>
+      <div class="actions">
+        <a class="btn primary" href="/leaderboard">Classic View</a>
+        <a class="btn glass" href="/me">My Stats</a>
+      </div>
+    </div>
+
+    <section class="discord-embed-card" id="discordEmbedLeaderboard">
+      <div class="embed-header">
+        <img src="/logo.jpg" class="embed-logo" alt="SteakQurban">
+        <div>
+          <h2>🎶 Voice Leaderboard <%= site.name %>!</h2>
+          <p>Panel ini nunjukin member paling aktif di voice.</p>
+        </div>
+      </div>
+
+      <div class="embed-list">
+        <% leaderboard.slice(0,10).forEach((user, index) => { %>
+          <div class="embed-rank-row">
+            <div class="embed-rank-left">
+              <span class="medal"><%= index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : "#" + (index + 1) %></span>
+              <% if (user.avatar) { %>
+                <img src="<%= user.avatar %>" class="mini-avatar">
+              <% } else { %>
+                <span class="mini-avatar fallback"><%= String(user.name || "?").slice(0,1).toUpperCase() %></span>
+              <% } %>
+              <strong>@<%= user.name %></strong>
+            </div>
+            <div class="embed-rank-stats">
+              <span><%= user.time %></span>
+              <span>✨ <%= user.xp %> XP</span>
+              <span>💰 <%= user.coins %></span>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+
+      <div class="podium-box">
+        <h3>👑 Podium</h3>
+        <% leaderboard.slice(0,3).forEach((user, index) => { %>
+          <div><%= index === 0 ? "🥇" : index === 1 ? "🥈" : "🥉" %> @<%= user.name %> • <%= user.time %></div>
+        <% }) %>
+      </div>
+
+      <div class="mode-box">
+        <h3>📊 Mode</h3>
+        <b>Voice Kings</b>
+        <p>Peringkat aktivitas voice paling aktif.</p>
+        <div class="mode-grid">
+          <div><span>🎶 Aktivitas VC</span><b><%= leaderboard[0]?.time || "-" %></b></div>
+          <div><span>✨ Voice XP</span><b><%= leaderboard[0]?.xp || 0 %></b></div>
+          <div><span>💸 Voice Coins</span><b><%= leaderboard[0]?.coins || 0 %></b></div>
+        </div>
+      </div>
+
+      <footer class="embed-footer">
+        <span><%= site.name %> Bot • Voice Kings Board</span>
+        <span id="embedUpdated">Live</span>
+      </footer>
+    </section>
+  </section>
+</main>
+
+<script src="/app.js"></script>
+</body>
+</html>
