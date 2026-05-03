@@ -95,11 +95,59 @@ function msToTime(ms) {
   return `${h}j ${m}m`;
 }
 
-async function getLeaderboard() {
+
+async function getBotVoiceLeaderboard(userId = "0") {
+  const base = process.env.BOT_API_URL;
+  if (!base) return null;
+
+  try {
+    const url = `${base.replace(/\/$/, "")}/api/leaderboard/voice?userId=${encodeURIComponent(userId)}`;
+    const res = await fetch(url, {
+      headers: { "Accept": "application/json" },
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data?.ok || !Array.isArray(data.leaderboard)) return null;
+    return data;
+  } catch (err) {
+    console.log("BOT_API_URL leaderboard fetch failed:", err.message);
+    return null;
+  }
+}
+
+async function getLeaderboard(userId = "0") {
+  const remote = await getBotVoiceLeaderboard(userId);
+  if (remote) return remote.leaderboard;
+
   const { Leaderboard, MainUsers } = getModels();
-  let rows = await safeFind(Leaderboard, {}, { sort: { xp: -1, coins: -1, voiceTime: -1 }, limit: 10 });
-  if (!rows.length) rows = await safeFind(MainUsers, {}, { sort: { xp: -1, coins: -1, voiceTime: -1 }, limit: 10 });
+  let rows = await safeFind(Leaderboard, {}, { sort: { "voice.totalMinutes": -1, "voice.totalXp": -1, "voice.totalCoins": -1, xp: -1, coins: -1, voiceTime: -1 }, limit: 10 });
+  if (!rows.length) rows = await safeFind(MainUsers, {}, { sort: { "voice.totalMinutes": -1, "voice.totalXp": -1, "voice.totalCoins": -1, xp: -1, coins: -1, voiceTime: -1 }, limit: 10 });
   return normalizeLeaderboard(rows);
+}
+
+
+async function getVoicePayload(userId = "0") {
+  const remote = await getBotVoiceLeaderboard(userId);
+  if (remote) return remote;
+
+  const leaderboard = await getLeaderboard(userId);
+  return {
+    ok: true,
+    source: "website-mongo-fallback",
+    mode: "voice",
+    title: "🎶 Voice Leaderboard SteakQurban!",
+    description: "Panel ini nunjukin member paling aktif di voice.",
+    label: "Voice Kings",
+    modeDescription: "Peringkat aktivitas voice paling aktif.",
+    leaderboard,
+    podium: leaderboard.slice(0, 3),
+    insights: {
+      activity: leaderboard[0]?.time || "-",
+      xp: leaderboard[0]?.xp || 0,
+      coins: leaderboard[0]?.coins || 0,
+    },
+    updatedAt: new Date().toISOString(),
+  };
 }
 
 async function getEvents() {
@@ -392,7 +440,10 @@ app.post("/admin/security/:id", requireAdmin, async (req, res) => {
 });
 
 app.get("/api/live", async (req, res) => {
-  res.json(await getDashboardData());
+  const data = await getDashboardData();
+  data.voicePayload = await getVoicePayload(req.session?.discordUser?.id || "0");
+  data.leaderboard = data.voicePayload.leaderboard || data.leaderboard;
+  res.json(data);
 });
 
 app.listen(PORT, async () => {
