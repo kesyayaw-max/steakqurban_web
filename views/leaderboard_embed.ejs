@@ -10,7 +10,7 @@
     <div class="embed-info">
       <p class="pill">🎮 DISCORD EMBED STYLE</p>
       <h1>Voice Leaderboard</h1>
-      <p class="muted">Tampilan live data mirip embed Discord SteakQurban. Fitur lama tetap aman.</p>
+      <p class="muted">Tampilan 1:1 dari API bot utama. Source: <%= voicePayload?.source || "fallback" %></p>
       <div class="actions">
         <a class="btn primary" href="/leaderboard">Classic View</a>
         <a class="btn glass" href="/me">My Stats</a>
@@ -21,8 +21,8 @@
       <div class="embed-header">
         <img src="/logo.jpg" class="embed-logo" alt="SteakQurban">
         <div>
-          <h2>🎶 Voice Leaderboard <%= site.name %>!</h2>
-          <p>Panel ini nunjukin member paling aktif di voice.</p>
+          <h2><%= voicePayload?.title || "🎶 Voice Leaderboard SteakQurban!" %></h2>
+          <p><%= voicePayload?.description || "Panel ini nunjukin member paling aktif di voice." %></p>
         </div>
       </div>
 
@@ -30,7 +30,7 @@
         <% leaderboard.slice(0,10).forEach((user, index) => { %>
           <div class="embed-rank-row">
             <div class="embed-rank-left">
-              <span class="medal"><%= index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : "#" + (index + 1) %></span>
+              <span class="medal"><%= user.medal || (index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : "#" + (index + 1)) %></span>
               <% if (user.avatar) { %>
                 <img src="<%= user.avatar %>" class="mini-avatar">
               <% } else { %>
@@ -49,19 +49,19 @@
 
       <div class="podium-box">
         <h3>👑 Podium</h3>
-        <% leaderboard.slice(0,3).forEach((user, index) => { %>
-          <div><%= index === 0 ? "🥇" : index === 1 ? "🥈" : "🥉" %> @<%= user.name %> • <%= user.time %></div>
+        <% (voicePayload?.podium || leaderboard.slice(0,3)).forEach((user, index) => { %>
+          <div><%= user.medal || (index === 0 ? "🥇" : index === 1 ? "🥈" : "🥉") %> @<%= user.name %> • <%= user.time %></div>
         <% }) %>
       </div>
 
       <div class="mode-box">
         <h3>📊 Mode</h3>
-        <b>Voice Kings</b>
-        <p>Peringkat aktivitas voice paling aktif.</p>
+        <b><%= voicePayload?.label || "Voice Kings" %></b>
+        <p><%= voicePayload?.modeDescription || "Peringkat aktivitas voice paling aktif." %></p>
         <div class="mode-grid">
-          <div><span>🎶 Aktivitas VC</span><b><%= leaderboard[0]?.time || "-" %></b></div>
-          <div><span>✨ Voice XP</span><b><%= leaderboard[0]?.xp || 0 %></b></div>
-          <div><span>💸 Voice Coins</span><b><%= leaderboard[0]?.coins || 0 %></b></div>
+          <div><span>🎶 Aktivitas VC</span><b data-insight="activity"><%= voicePayload?.insights?.activity || "-" %></b></div>
+          <div><span>✨ Voice XP</span><b data-insight="xp"><%= voicePayload?.insights?.xp || 0 %></b></div>
+          <div><span>💸 Voice Coins</span><b data-insight="coins"><%= voicePayload?.insights?.coins || 0 %></b></div>
         </div>
       </div>
 
